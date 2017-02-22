@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Services\CrawlImageService;
 use App\Googl;
 use Carbon\Carbon;
+use App\Models\Image;
 
 class ImagesController extends Controller
 {

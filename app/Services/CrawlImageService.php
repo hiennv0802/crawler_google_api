@@ -79,20 +79,22 @@ class CrawlImageService
 
     public function updateData()
     {
-        $image = Image::all();
+        $image_names = Image::all()->pluck('name');
         $files = $this->getImageGoogl();
         $data['subject'] = array('name' => 'Girl');
-
+        $cate_names = Category::all()->pluck('name');
         foreach ($files as $file) {
-            $data['images'][] = [
-                'link' => $file->webContentLink,
-                'name' => $file->name
-            ];
+            $data = [];
+            $data['link'] = $file->webContentLink;
+            $data['name'] = $file->name;
+
+            $pre_cate = explode('_', $data['name']);
+            $category = Category::firstOrCreate(['name' => $pre_cate[0]]);
+            $data['category_id'] = $category->id;
+            if (!in_array($data['name'], (array)$image_names) && !is_null($data['link']))
+            {
+                Image::create($data);
+            }
         }
-
-        dd($data['images']);
-
-        Category::create($data['subject'])
-            ->images()->createMany($data['images']);
     }
 }
