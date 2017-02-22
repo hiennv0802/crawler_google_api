@@ -9,7 +9,8 @@
 
             <div class="file-title">
                 <img src="{{ $file->iconLink }}">
-                {{ $file->name }}
+                {{ $file->name }}<br>
+                {{ $file->id }}
             </div>
             <div class="file-modified">
                 last modified: {{ Date::format($file->modifiedTime) }}

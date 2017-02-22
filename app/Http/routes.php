@@ -10,6 +10,9 @@
 | and give it the controller to call when that URI is requested.
 |
 */
+Route::group(['namespace' => 'Api'], function() {
+    Route::get('/crawl_images', 'ImagesController@getImages');
+});
 
 // This is where the user can see a login button for logging into Google
 Route::get('/', 'HomeController@index');
