@@ -4,22 +4,26 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Googl;
 use Carbon\Carbon;
+use App\Services\CrawlImageService;
 
 class AdminController extends Controller
 {
     private $client;
     private $drive;
 
-    public function __construct(Googl $googl)
+    public function __construct(Googl $googl, CrawlImageService $crawlImageService)
     {
         $this->client = $googl->client();
         $this->client->setAccessToken(session('user.token'));
         $this->drive = $googl->drive($this->client);
+        $this->crawlImageService = $crawlImageService;
     }
 
 
     public function index()
     {
+        $this->crawlImageService->updateData();
+
         return view('admin.dashboard');
     }
 

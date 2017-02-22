@@ -13,12 +13,15 @@ class CreateImageTable extends Migration
     public function up()
     {
         Schema::create('images', function (Blueprint $table) {
+            $table->engine = 'InnoDB';
+
             $table->increments('id');
             $table->string('link')->unique();
             $table->string('name')->unique();
             $table->integer('category_id');
-            $table->foreign('category_id')->references('id')->on('categories');
             $table->timestamps();
+
+            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
         });
     }
 

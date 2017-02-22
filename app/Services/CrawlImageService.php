@@ -23,16 +23,17 @@ class CrawlImageService
     {
         $images = Image::all();
         $results = [];
+
         foreach ($images as $image) {
             $result = [];
             $result['id'] = $image->id;
             $result['link'] = $image->link;
-            $result['category'] = $image->category->name;
+            $result['name'] = $image->name;
+            // $result['category'] = $image->category->name;
             $results[] = $result;
         }
-        $a = $this->getImageGoogl();
         // dd($a);
-        return $a;
+        return $results;
     }
 
     public function getImageGoogl()
