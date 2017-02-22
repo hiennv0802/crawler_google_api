@@ -91,6 +91,7 @@ class CrawlImageService
             $pre_cate = explode('_', $data['name']);
             $category = Category::firstOrCreate(['name' => $pre_cate[0]]);
             $data['category_id'] = $category->id;
+
             if (!in_array($data['name'], (array)$image_names) && !is_null($data['link']))
             {
                 Image::create($data);

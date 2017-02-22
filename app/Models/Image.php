@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Image extends Model
 {
-    protected $fillable = ['link'];
+    protected $fillable = ['link', 'name', 'category_id'];
 
     public function category()
     {

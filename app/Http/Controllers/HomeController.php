@@ -29,7 +29,6 @@ class HomeController extends Controller
             $email = $google_user['emails'][0]['value'];
             $first_name = $google_user['name']['givenName'];
             $last_name = $google_user['name']['familyName'];
-
             session([
                 'user' => [
                     'email' => $email,
