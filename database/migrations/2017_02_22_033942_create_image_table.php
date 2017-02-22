@@ -18,10 +18,15 @@ class CreateImageTable extends Migration
             $table->increments('id');
             $table->string('link')->unique();
             $table->string('name')->unique();
-            $table->integer('category_id');
+            $table->integer('category_id')->unsigned();;
             $table->timestamps();
+        });
 
-            $table->foreign('category_id')->references('id')->on('categories')->onDelete('cascade');
+        Schema::table('images', function ($table) {
+            $table->foreign('category_id')
+                ->references('id')->on('categories')
+                ->onDelete('cascade')
+                ->onUpdate('cascade');
         });
     }
 
