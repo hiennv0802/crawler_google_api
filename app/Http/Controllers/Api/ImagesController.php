@@ -23,8 +23,8 @@ class ImagesController extends Controller
         //$categories = DB::table('categories')->get();
         // $this->crawlImageService->updateData();
 
-        // $images = $this->crawlImageService->crawlImages();
-        $images = Image::all();
+        $images = $this->crawlImageService->crawlImages();
+        // $images = Image::all();
         return response()->json(['images' => $images]);
     }
 }

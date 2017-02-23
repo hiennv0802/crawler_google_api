@@ -29,7 +29,7 @@ class CrawlImageService
             $result['id'] = $image->id;
             $result['link'] = $image->link;
             $result['name'] = $image->name;
-            // $result['category'] = $image->category->name;
+            $result['category'] = $image->category->name;
             $results[] = $result;
         }
         // dd($a);
@@ -80,23 +80,33 @@ class CrawlImageService
 
     public function updateData()
     {
-        $image_names = Image::all()->pluck('name');
         $files = $this->getImageGoogl();
         $data['subject'] = array('name' => 'Girl');
         $cate_names = Category::all()->pluck('name');
         foreach ($files as $file) {
             $data = [];
-            $data['link'] = $file->webContentLink;
-            $data['name'] = $file->name;
 
-            $pre_cate = explode('_', $data['name']);
-            $category = Category::firstOrCreate(['name' => $pre_cate[0]]);
-            $data['category_id'] = $category->id;
+            if ($this->isImageFormat($file->name)) {
+                $data['name'] = $file->name;
+                $data['link'] = $file->webContentLink;
+                $pre_cate = explode('_', $data['name']);
+                $category = Category::firstOrCreate(['name' => $pre_cate[0]]);
 
-            if (!in_array($data['name'], (array)$image_names) && !is_null($data['link']))
-            {
-                Image::create($data);
+                $image_names = Image::all()->pluck('name')->toArray();
+                $data['category_id'] = $category->id;
+
+                if (!in_array($data['name'], (array)$image_names) && !is_null($data['link']) && $this->isImageFormat($file->name))
+                {
+                    Image::create($data);
+                }
             }
         }
+    }
+
+    public function isImageFormat($image_name)
+    {
+        $tmp = explode('.', $image_name);
+        $format = end($tmp);
+        return in_array($format, config('image.image_formats'));
     }
 }

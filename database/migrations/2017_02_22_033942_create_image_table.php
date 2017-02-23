@@ -16,8 +16,8 @@ class CreateImageTable extends Migration
             $table->engine = 'InnoDB';
 
             $table->increments('id');
-            $table->string('link')->unique();
-            $table->string('name')->unique();
+            $table->string('link');
+            $table->string('name');
             $table->integer('category_id')->unsigned();;
             $table->timestamps();
         });
