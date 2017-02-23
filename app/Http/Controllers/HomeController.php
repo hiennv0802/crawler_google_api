@@ -20,12 +20,11 @@ class HomeController extends Controller
 
             $client->authenticate($request->input('code'));
             $token = $client->getAccessToken();
-
+            $client->setAccessType("offline");
             $plus = new \Google_Service_Plus($client);
 
             $google_user = $plus->people->get('me');
             $id = $google_user['id'];
-
             $email = $google_user['emails'][0]['value'];
             $first_name = $google_user['name']['givenName'];
             $last_name = $google_user['name']['familyName'];
