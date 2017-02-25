@@ -9,7 +9,8 @@
         "laravel/framework": "5.2.*",
         "nesbot/carbon": "^1.22",
         "google/apiclient": "^2.1",
-        "illuminate/pagination": "~5.0"
+        "illuminate/pagination": "~5.0",
+        "fabpot/goutte": "^3.2"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",
