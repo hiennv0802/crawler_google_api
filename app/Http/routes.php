@@ -12,6 +12,7 @@
 */
 Route::group(['namespace' => 'Api'], function() {
     Route::get('/crawl_images', 'ImagesController@getImages');
+    Route::get('/categories', 'ImagesController@getCategories');
 });
 
 // This is where the user can see a login button for logging into Google

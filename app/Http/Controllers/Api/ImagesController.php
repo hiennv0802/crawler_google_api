@@ -7,6 +7,7 @@ use App\Services\CrawlImageService;
 use App\Googl;
 use Carbon\Carbon;
 use App\Models\Image;
+use App\Models\Category;
 
 class ImagesController extends Controller
 {
@@ -21,10 +22,15 @@ class ImagesController extends Controller
     public function getImages()
     {
         //$categories = DB::table('categories')->get();
-        // $this->crawlImageService->updateData();
+        $this->crawlImageService->updateData();
         $images = $this->crawlImageService->crawlImages();
-        // $images = Image::all();
         return response()->json(['images' => $images]);
+    }
+
+    public function getCategories()
+    {
+        $categories = Category::all();
+        return response()->json(['categories' => $categories]);
     }
 }
 ?>

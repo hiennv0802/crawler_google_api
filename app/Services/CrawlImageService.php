@@ -22,7 +22,14 @@ class CrawlImageService
     public function crawlImages()
     {
         if (isset($_GET['page'])) { $page = $_GET['page']; } else {$page = 1;};
-        $images = Image::all();
+        if (isset($_GET['category']))
+        {
+            $cateName = $_GET['category'];
+        } else {
+            $cateName = Category::first()->name;
+        }
+        $cate = Category::where('name', $cateName)->first();
+        $images = is_null($cate) ? Category::first()->images : Image::all();
         $perPage = config('image.default_record');
         $offSet = ($page * $perPage) - $perPage;
         $itemsForCurrentPages = array_slice($images->toArray(), $offSet, $perPage, true);
@@ -33,7 +40,6 @@ class CrawlImageService
             $result['id'] = $image->id;
             $img = Image::find($result['id']);
             $result['link'] = $image->link;
-            $result['name'] = $image->name;
             $result['category'] = $img->category->name;
             $results[] = $result;
         }
