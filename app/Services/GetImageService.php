@@ -17,7 +17,7 @@ class GetImageService
             $cateName = Category::first()->name;
         }
         $cate = Category::where('name', $cateName)->first();
-        $images = !is_null($cate) ? Image::all() : Category::first()->images;
+        $images = is_null($cate) ? Image::all() : $cate->images;
         $perPage = config('image.default_record');
         $offSet = ($page * $perPage) - $perPage;
         $itemsForCurrentPages = array_slice($images->toArray(), $offSet, $perPage, true);
