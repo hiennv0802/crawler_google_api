@@ -3,9 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use Illuminate\Http\Request;
-use App\Services\CrawlImageService;
-use App\Googl;
-use Carbon\Carbon;
+use App\Services\GetImageService;
 use App\Models\Image;
 use App\Models\Category;
 
@@ -14,16 +12,14 @@ class ImagesController extends Controller
 
     protected $crawlImageService;
 
-    public function __construct(CrawlImageService $crawlImageService)
+    public function __construct(GetImageService $getImageService)
     {
-        $this->crawlImageService = $crawlImageService;
+        $this->getImageService = $getImageService;
     }
 
     public function getImages()
     {
-        //$categories = DB::table('categories')->get();
-        // $this->crawlImageService->updateData();
-        $images = $this->crawlImageService->crawlImages();
+        $images = $this->getImageService->crawlImages();
         return response()->json(['images' => $images]);
     }
 
