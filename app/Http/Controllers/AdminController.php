@@ -22,11 +22,14 @@ class AdminController extends Controller
 
     public function index()
     {
-        $this->crawlImageService->updateData();
-
         return view('admin.dashboard');
     }
 
+    public function updateData()
+    {
+        $this->crawlImageService->updateData();
+        return redirect()->action('Api\ImagesController@getImages');
+    }
 
     public function files()
     {

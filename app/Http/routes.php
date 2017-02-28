@@ -16,7 +16,10 @@ Route::group(['namespace' => 'Api'], function() {
 });
 
 // This is where the user can see a login button for logging into Google
-Route::get('/', 'HomeController@index');
+// Route::get('/', 'HomeController@index');
+Route::get('/', function() {
+    return redirect('/crawl_images');
+});
 
 // This is where the user gets redirected upon clicking the login button on the home page
 Route::get('/login', 'HomeController@login');
@@ -26,6 +29,7 @@ Route::get('/dashboard', 'AdminController@index');
 
 // Shows a list of files in the users' Google drive
 Route::get('/files', 'AdminController@files');
+Route::get('/updateData', 'AdminController@updateData');
 
 // Allows the user to search for a file in the Google drive
 Route::get('/search', 'AdminController@search');
