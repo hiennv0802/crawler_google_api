@@ -10,11 +10,10 @@ class GetImageService
     public function crawlImages()
     {
         if (isset($_GET['page'])) { $page = $_GET['page']; } else {$page = 1;};
+        $cateName = 'all';
         if (isset($_GET['category']))
         {
             $cateName = $_GET['category'];
-        } else {
-            $cateName = Category::first()->name;
         }
         $cate = Category::where('name', $cateName)->first();
         $images = is_null($cate) ? Image::all() : $cate->images;
