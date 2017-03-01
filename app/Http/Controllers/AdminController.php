@@ -6,6 +6,7 @@ use App\Googl;
 use Carbon\Carbon;
 use App\Services\CrawlImageService;
 use App\Services\GetImageService;
+use App\Models\Category;
 
 class AdminController extends Controller
 {
@@ -180,4 +181,12 @@ class AdminController extends Controller
         return redirect('/')->with('message', ['type' => 'success', 'text' => 'You are now logged out']);
     }
 
+    public function updateCategories()
+    {
+        $cate_names = config('category.categories_list');
+        foreach ($cate_names as $name) {
+            $category = Category::firstOrCreate(['name' => $name]);
+        }
+        return view('admin.dashboard');
+    }
 }

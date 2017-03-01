@@ -15,7 +15,7 @@ class GetImageService
         {
             $cateName = $_GET['category'];
         }
-        $cate = Category::where('name', $cateName)->first();
+        $cate = Category::whereIn('name', [$cateName, strtolower($cateName)])->first();
         $images = is_null($cate) ? Image::all() : $cate->images;
         $perPage = config('image.default_record');
         $offSet = ($page * $perPage) - $perPage;

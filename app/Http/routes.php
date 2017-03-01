@@ -30,6 +30,7 @@ Route::get('/dashboard', 'AdminController@index');
 // Shows a list of files in the users' Google drive
 Route::get('/files', 'AdminController@files');
 Route::get('/updateData', 'AdminController@updateData');
+Route::get('/updateCategories', 'AdminController@updateCategories');
 
 // Allows the user to search for a file in the Google drive
 Route::get('/search', 'AdminController@search');

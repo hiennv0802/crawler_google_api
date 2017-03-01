@@ -19,34 +19,7 @@ class CrawlImageService
         $this->drive = $googl->drive($this->client);
     }
 
-    // public function crawlImages()
-    // {
-    //     if (isset($_GET['page'])) { $page = $_GET['page']; } else {$page = 1;};
-    //     if (isset($_GET['category']))
-    //     {
-    //         $cateName = $_GET['category'];
-    //     } else {
-    //         $cateName = Category::first()->name;
-    //     }
-    //     $cate = Category::where('name', $cateName)->first();
-    //     $images = !is_null($cate) ? Image::all() : Category::first()->images;
-    //     $perPage = config('image.default_record');
-    //     $offSet = ($page * $perPage) - $perPage;
-    //     $itemsForCurrentPages = array_slice($images->toArray(), $offSet, $perPage, true);
-    //     $results = [];
-    //     foreach ($itemsForCurrentPages as $itemsForCurrentPage) {
-    //         $image = (object)$itemsForCurrentPage;
-    //         $result = [];
-    //         $result['id'] = $image->id;
-    //         $img = Image::find($result['id']);
-    //         $result['link'] = $image->link;
-    //         $result['category'] = $img->category->name;
-    //         $results[] = $result;
-    //     }
-    //     return $results;
-    // }
-
-    public function getImageGoogl()
+    public function getImageGoogl($query)
     {
         $result = [];
         $pageToken = NULL;
@@ -56,7 +29,7 @@ class CrawlImageService
         do {
             try {
                 $parameters = [
-                    'q' => "viewedByMeTime >= '$three_months_ago' or modifiedTime >= '$three_months_ago'",
+                    'q' => $query,
                     'orderBy' => 'modifiedTime',
                     'fields' => 'nextPageToken, files(id, name, modifiedTime, iconLink, webViewLink, webContentLink)',
                 ];
@@ -90,22 +63,32 @@ class CrawlImageService
 
     public function updateData()
     {
-        $files = $this->getImageGoogl();
-        $data['subject'] = array('name' => 'Girl');
-        $cate_names = Category::all()->pluck('name');
-        foreach ($files as $file) {
+        $cateQuery = "mimeType='application/vnd.google-apps.folder' and 'root' in parents and trashed=false";
+        $files = $this->getImageGoogl($cateQuery);
+        foreach ($files as $f) {
+            if (in_array($f->name, config('category.categories_list')))
+            {
+                $this->updateImageIntoCate($f->id, $f->name);
+            }
+        }
+    }
+
+    public function updateImageIntoCate($cateId, $cateName)
+    {
+        $imageQuery = "'$cateId' in parents and trashed=false";
+        $imageFiles = $this->getImageGoogl($imageQuery);
+        $currentCategory = Category::where('name', $cateName)->first();
+        foreach ($imageFiles as $img) {
             $data = [];
-
-            if ($this->isImageFormat($file->name)) {
-                $data['name'] = $file->name;
-                $data['link'] = $file->webContentLink;
-                $pre_cate = explode('_', $data['name']);
-                $category = Category::firstOrCreate(['name' => $pre_cate[0]]);
-
+            if($this->isImageFormat($img->name))
+            {
                 $image_names = Image::all()->pluck('name')->toArray();
-                $data['category_id'] = $category->id;
 
-                if (!in_array($data['name'], (array)$image_names) && !is_null($data['link']) && $this->isImageFormat($file->name))
+                $data['name'] = $img->name;
+                $data['link'] = $img->webContentLink;
+                $data['category_id'] = $currentCategory->id;
+                if (!in_array($data['name'], (array)$image_names) &&
+                    !is_null($data['link']) && $this->isImageFormat($img->name))
                 {
                     Image::create($data);
                 }
