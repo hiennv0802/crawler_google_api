@@ -6,6 +6,7 @@ use App\Googl;
 use Carbon\Carbon;
 use App\Services\CrawlImageService;
 use App\Services\GetImageService;
+use App\Services\CrawlerFromWebsiteService;
 use App\Models\Category;
 
 class AdminController extends Controller
@@ -13,13 +14,14 @@ class AdminController extends Controller
     private $client;
     private $drive;
 
-    public function __construct(Googl $googl, CrawlImageService $crawlImageService, GetImageService $getImageService)
+    public function __construct(Googl $googl, CrawlImageService $crawlImageService, GetImageService $getImageService, CrawlerFromWebsiteService $crawlerFromWebsiteService)
     {
         $this->client = $googl->client();
         $this->client->setAccessToken(session('user.token'));
         $this->drive = $googl->drive($this->client);
         $this->crawlImageService = $crawlImageService;
         $this->getImageService = $getImageService;
+        $this->crawlerFromWebsiteService = $crawlerFromWebsiteService;
     }
 
 
@@ -32,6 +34,12 @@ class AdminController extends Controller
     {
         $this->crawlImageService->updateData();
         return redirect()->action('Api\ImagesController@getImages');
+    }
+
+    public function crawlerImages()
+    {
+        $this->crawlerFromWebsiteService->crapTest();
+        return view('admin.dashboard');
     }
 
     public function files()

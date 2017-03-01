@@ -31,6 +31,7 @@ Route::get('/dashboard', 'AdminController@index');
 Route::get('/files', 'AdminController@files');
 Route::get('/updateData', 'AdminController@updateData');
 Route::get('/updateCategories', 'AdminController@updateCategories');
+Route::get('/crawler_images', 'AdminController@crawlerImages');
 
 // Allows the user to search for a file in the Google drive
 Route::get('/search', 'AdminController@search');
