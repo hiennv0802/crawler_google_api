@@ -38,7 +38,7 @@ class AdminController extends Controller
 
     public function crawlerImages()
     {
-        $this->crawlerFromWebsiteService->crapTest();
+        $this->crawlerFromWebsiteService->getList();
         return view('admin.dashboard');
     }
 
