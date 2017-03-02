@@ -1,55 +1,45 @@
 <?php
 namespace App\Services;
 
+use Sunra\PhpSimple\HtmlDomParser;
+
+
 class CrawlerFromWebsiteService
 {
-    public function __construct()
+    private $url;
+
+    public function __construct($link)
     {
+        $this->url = $link;
     }
 
-    public function curl($url) {
-        // Assigning cURL options to an array
-        $options = Array(
-            CURLOPT_RETURNTRANSFER => TRUE,  // Setting cURL's option to return the webpage data
-            CURLOPT_FOLLOWLOCATION => TRUE,  // Setting cURL to follow 'location' HTTP headers
-            CURLOPT_AUTOREFERER => TRUE, // Automatically set the referer where following 'location' HTTP headers
-            CURLOPT_CONNECTTIMEOUT => 120,   // Setting the amount of time (in seconds) before the request times out
-            CURLOPT_TIMEOUT => 120,  // Setting the maximum amount of time for cURL to execute queries
-            CURLOPT_MAXREDIRS => 10, // Setting the maximum number of redirections to follow
-            CURLOPT_USERAGENT => "Mozilla/5.0 (X11; U; Linux i686; en-US; rv:1.9.1a2pre) Gecko/2008073000 Shredder/3.0a2pre ThunderBrowse/3.2.1.8",  // Setting the useragent
-            CURLOPT_URL => $url, // Setting cURL's URL option with the $url variable passed into the function
-        );
+    private function getDom($link)
+    {
+        $ch = curl_init($link);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        $content = curl_exec($ch);
+        curl_close($ch);
+        $dom = HtmlDomParser::str_get_html($content);
 
-        $ch = curl_init();  // Initialising cURL
-        curl_setopt_array($ch, $options);   // Setting cURL's options using the previously assigned array data in $options
-        $data = curl_exec($ch); // Executing the cURL request and assigning the returned data to the $data variable
-        curl_close($ch);    // Closing cURL
-        return $data;
+        return $dom;
     }
 
-    public function crapTest()
+    public function getList()
     {
-        $url = "http://iphonewalls.net/animals/";
-        $results_page = $this->curl($url);
-
-        $results_page = $this->scrapeBetween($results_page, "<div id=\"main\">", "<div id=\"sidebar\">");
-
-        $separate_results = explode("<td class=\"image\">", $results_page);
-
-        foreach ($separate_results as $separate_result) {
-            if ($separate_result != "") {
-                $results_urls[] = "http://www.imdb.com" . scrape_between($separate_result, "href=\"", "\" title=");
-            }
+        $dom = $this->getDom($this->url);
+        $count = 16;
+        foreach ($dom->find('//*[@id="wallpapers"]/div/article[*]/figure/a/img') as $link) {
+            $userImage = 'abstract_'. $count;
+            $path = '/home/likewise-open/FRAMGIA/nguyen.quang.duy/Google_driver/Abstract/';
+            $link_image = str_replace(" ","%20", preg_replace( "/-\d+x\d+/", "", $link->src));
+            $ch = curl_init($link_image);
+            $fp = fopen($path . $userImage, 'wb');
+            curl_setopt($ch, CURLOPT_FILE, $fp);
+            curl_setopt($ch, CURLOPT_HEADER, 0);
+            $result = curl_exec($ch);
+            curl_close($ch);
+            fclose($fp);
+            $count++;
         }
-
-        print_r($results_urls);
-    }
-
-    public function scrapeBetween($data, $start, $end){
-        $data = stristr($data, $start); // Stripping all data from before $start
-        $data = substr($data, strlen($start));  // Stripping $start
-        $stop = stripos($data, $end);   // Getting the position of the $end of the data to scrape
-        $data = substr($data, 0, $stop);    // Stripping all data from after and including the $end of the data to scrape
-        return $data;   // Returning the scraped data from the function
     }
 }
