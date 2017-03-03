@@ -1,9 +1,8 @@
 <?php
 return [
-    'categories_list' => ['Abstract', 'Animal', 'Anime', 'Artistic', 'CGI', 'Cartoon', 'Celebrity',
-        'Comics', 'Dark', 'Earth', 'Fantasy', 'Food', 'Humor', 'Game', 'Holiday', 'Man',
-        'Made', 'Men', 'Military', 'Misc', 'Movie', 'Multi', 'Monitor', 'Music', 'Pattern',
-        'Photography', 'Products', 'Religious', 'Sci', 'FiSportsTV', 'Show', 'Technology',
-        'Vehicles', 'Video', 'Game', 'Women', 'Weapons'
+    'categories_list' => ['abstract', 'animals', 'apple', 'architecture', 'brands', 'cars-bikes', 'close-ups',
+        'food-drinks', 'funny', 'games', 'girls', 'guys', 'holiday', 'icon-tiles', 'illustrations', 'misc',
+        'movies', 'music', 'nature', 'places', 'science-fiction', 'shelves', 'space', 'sports',
+        'technology', 'textures', 'typography'
     ],
 ];
